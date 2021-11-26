@@ -1,4 +1,4 @@
-package com.epam.rd.autotasks.springstatefulcalc;
+package com.epam.rd.autotasks.springstatefulcalc.initializer;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -12,7 +12,7 @@ import javax.servlet.ServletRegistration;
 
 public class WebAppInitializer implements WebApplicationInitializer {
     @Override
-    public void onStartup(final ServletContext sc) throws ServletException {
+    public void onStartup(final ServletContext sc) {
 
         AnnotationConfigWebApplicationContext root =
                 new AnnotationConfigWebApplicationContext();
