@@ -1,6 +1,8 @@
 package com.epam.rd.autotasks.springstatefulcalc.service;
 
+import com.epam.rd.autotasks.springstatefulcalc.cacheData.CacheData;
 import com.epam.rd.autotasks.springstatefulcalc.exception.BadRequestException;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,13 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.epam.rd.autotasks.springstatefulcalc.cacheData.CacheData.SINGLETON_DATA;
-import static com.epam.rd.autotasks.springstatefulcalc.constant.Constants.*;
+import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.*;
 
-public class AppControllerService {
-    public static final AppControllerService APP_CONTROLLER_SERVICE = new AppControllerService();
+@Service
+public class WebCalculatorControllerServiceImpl implements CalculatorControllerService {
+    private final CacheData cacheData;
 
-    private AppControllerService() {
+    public WebCalculatorControllerServiceImpl(CacheData cacheData) {
+        this.cacheData = cacheData;
     }
 
     public boolean isParameterHasOverLimitValue(String paramValue) {
@@ -51,11 +54,11 @@ public class AppControllerService {
 
     public void addDataToCache(HttpServletResponse httpServletResponse, HttpSession session, String paramName) throws IOException {
         if (session.isNew()) {
-            SINGLETON_DATA.getCacheData().put(session.getId(), new ConcurrentHashMap<>());
+            cacheData.getCacheData().put(session.getId(), new ConcurrentHashMap<>());
         }
-        if (SINGLETON_DATA.getCacheData().get(session.getId()).get(paramName) == null) {
+        if (cacheData.getCacheData().get(session.getId()).get(paramName) == null) {
             httpServletResponse.sendError(HttpServletResponse.SC_CREATED);
         }
-        SINGLETON_DATA.getCacheData().get(session.getId()).put(paramName, session.getAttribute(paramName).toString());
+        cacheData.getCacheData().get(session.getId()).put(paramName, session.getAttribute(paramName).toString());
     }
 }

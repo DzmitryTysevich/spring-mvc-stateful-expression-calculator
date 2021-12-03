@@ -1,7 +1,7 @@
 package com.epam.rd.autotasks.springstatefulcalc.constant;
 
-public class Constants {
-    private Constants() {
+public class CommonConstants {
+    private CommonConstants() {
     }
 
     public static final String RESULT = "result";
@@ -14,8 +14,6 @@ public class Constants {
     public static final String MULTIPLY = "*";
     public static final String WRONG_EXPRESSION = "Wrong expression";
     public static final String OVER_RANGE = "Over range";
-    public static final String RESULT_PATH = "/calc/result";
-    public static final String MULTI_CALC_PATH = "/calc/*";
     public static final String UNEXPECTED_TOKEN = "Unexpected token: ";
     public static final String AT_POSITION = " at position: ";
     public static final String UNEXPECTED_CHARACTER = "Unexpected character: ";

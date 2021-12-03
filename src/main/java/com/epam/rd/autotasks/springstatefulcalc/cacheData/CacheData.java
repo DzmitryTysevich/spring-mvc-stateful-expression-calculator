@@ -1,14 +1,13 @@
 package com.epam.rd.autotasks.springstatefulcalc.cacheData;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Repository
 public class CacheData {
-    public static final CacheData SINGLETON_DATA = new CacheData();
     private final Map<String, Map<String, String>> dataMap = new ConcurrentHashMap<>();
-
-    private CacheData() {
-    }
 
     public Map<String, Map<String, String>> getCacheData() {
         return dataMap;

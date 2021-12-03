@@ -7,7 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.epam.rd.autotasks.springstatefulcalc.constant.Constants.*;
+import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.*;
 
 /**
  * <h3>Parser rules for analyzer:</h3>
@@ -37,7 +37,6 @@ public class LexemeAnalyzerImpl implements Analyzer {
      */
     private List<Lexeme> lexemeAnalyze(String expression) {
         ArrayList<Lexeme> lexemes = new ArrayList<>();
-        System.out.println(expression);
         int position = 0;
         while (position < expression.length()) {
             char character = expression.charAt(position);
