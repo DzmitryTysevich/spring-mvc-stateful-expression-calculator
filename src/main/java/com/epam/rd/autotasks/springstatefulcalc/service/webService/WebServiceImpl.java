@@ -1,44 +1,25 @@
-package com.epam.rd.autotasks.springstatefulcalc.service;
+package com.epam.rd.autotasks.springstatefulcalc.service.webService;
 
 import com.epam.rd.autotasks.springstatefulcalc.cacheData.CacheData;
 import com.epam.rd.autotasks.springstatefulcalc.exception.BadRequestException;
+import com.epam.rd.autotasks.springstatefulcalc.service.WebService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.*;
+import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.BAD_URL;
+import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.URL_SUBSTRING;
 
 @Service
-public class WebCalculatorControllerServiceImpl implements CalculatorControllerService {
+public class WebServiceImpl implements WebService {
     private final CacheData cacheData;
 
-    public WebCalculatorControllerServiceImpl(CacheData cacheData) {
+    public WebServiceImpl(CacheData cacheData) {
         this.cacheData = cacheData;
-    }
-
-    public boolean isParameterHasOverLimitValue(String paramValue) {
-        return isDigit(paramValue) && Math.abs(Integer.parseInt(paramValue)) > TEN_THOUSAND;
-    }
-
-    public boolean isGoodFormatExpression(String expression) {
-        return (expression.contains(PLUS) || expression.contains(MINUS) ||
-                expression.contains(DIVIDE) || expression.contains(MULTIPLY));
-    }
-
-    public boolean isDigit(String paramValue) {
-        char[] paramValueChars = paramValue.toCharArray();
-        ArrayList<Character> arrayList = new ArrayList<>();
-        for (char paramValueChar : paramValueChars) {
-            if (paramValueChar != MINUS_CHAR) {
-                arrayList.add(paramValueChar);
-            }
-        }
-        return arrayList.stream().allMatch(Character::isDigit);
     }
 
     public String getParamNameFromURL(HttpServletRequest httpServletRequest) {

@@ -4,7 +4,8 @@ import com.epam.rd.autotasks.springstatefulcalc.cacheData.CacheData;
 import com.epam.rd.autotasks.springstatefulcalc.config.WebCalculatorConfig;
 import com.epam.rd.autotasks.springstatefulcalc.constant.PathConstants;
 import com.epam.rd.autotasks.springstatefulcalc.exception.BadRequestException;
-import com.epam.rd.autotasks.springstatefulcalc.service.CalculatorControllerService;
+import com.epam.rd.autotasks.springstatefulcalc.service.CalculatorService;
+import com.epam.rd.autotasks.springstatefulcalc.service.WebService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,13 +29,15 @@ import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.
 import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.WRONG_EXPRESSION;
 
 @Controller
-public class WebCalculatorController extends HttpServlet {
+public class WebCalculatorController {
 
-    private final CalculatorControllerService calculatorControllerService;
+    private final WebService webService;
+    private final CalculatorService calculatorService;
     private final CacheData cacheData;
 
-    public WebCalculatorController(CalculatorControllerService appControllerService, CacheData cacheData) {
-        this.calculatorControllerService = appControllerService;
+    public WebCalculatorController(WebService webService, CalculatorService calculatorService, CacheData cacheData) {
+        this.webService = webService;
+        this.calculatorService = calculatorService;
         this.cacheData = cacheData;
     }
 
@@ -45,20 +47,20 @@ public class WebCalculatorController extends HttpServlet {
                          Model model) throws BadRequestException, IOException {
         HttpSession session = httpServletRequest.getSession();
         try (BufferedReader bufferedReader = httpServletRequest.getReader()) {
-            String paramNameFromURL = calculatorControllerService.getParamNameFromURL(httpServletRequest);
+            String paramNameFromURL = webService.getParamNameFromURL(httpServletRequest);
             String paramValue = bufferedReader.readLine();
 
             session.setAttribute(paramNameFromURL, paramValue);
 
             if (EXPRESSION.equalsIgnoreCase(paramNameFromURL)) {
-                if (calculatorControllerService.isGoodFormatExpression(paramValue)) {
-                    calculatorControllerService.addDataToCache(httpServletResponse, session, paramNameFromURL);
+                if (calculatorService.isGoodFormatExpression(paramValue)) {
+                    webService.addDataToCache(httpServletResponse, session, paramNameFromURL);
                 } else {
                     httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, WRONG_EXPRESSION);
                 }
             } else {
-                if (!calculatorControllerService.isParameterHasOverLimitValue(paramValue)) {
-                    calculatorControllerService.addDataToCache(httpServletResponse, session, paramNameFromURL);
+                if (!calculatorService.isParameterHasOverLimitValue(paramValue)) {
+                    webService.addDataToCache(httpServletResponse, session, paramNameFromURL);
                 } else {
                     httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, OVER_RANGE);
                 }
@@ -91,7 +93,7 @@ public class WebCalculatorController extends HttpServlet {
     @DeleteMapping(PathConstants.MULTI_CALC_PATH)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteValue(HttpServletRequest httpServletRequest, HttpSession session) {
-        String paramNameFromURL = calculatorControllerService.getParamNameFromURL(httpServletRequest);
+        String paramNameFromURL = webService.getParamNameFromURL(httpServletRequest);
         session.removeAttribute(paramNameFromURL);
         cacheData.getCacheData().get(session.getId()).remove(paramNameFromURL);
     }

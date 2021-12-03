@@ -1,18 +1,16 @@
-package com.epam.rd.autotasks.springstatefulcalc.service;
+package com.epam.rd.autotasks.springstatefulcalc.service.calculatorService;
 
+import com.epam.rd.autotasks.springstatefulcalc.service.CalculatorService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.EMPTY_STRING;
-import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.EXPRESSION;
+import static com.epam.rd.autotasks.springstatefulcalc.constant.CommonConstants.*;
 
 @Service
 public class WebCalculatorServiceImpl implements CalculatorService {
-
     public String[] getExpressionAsArray(Map<String, String> cacheData) {
         return cacheData.get(EXPRESSION).split(EMPTY_STRING);
     }
@@ -43,5 +41,14 @@ public class WebCalculatorServiceImpl implements CalculatorService {
                     }
                 });
         return String.join(EMPTY_STRING, expressionList);
+    }
+
+    public boolean isParameterHasOverLimitValue(String paramValue) {
+        return isDigit(paramValue) && Math.abs(Integer.parseInt(paramValue)) > TEN_THOUSAND;
+    }
+
+    public boolean isGoodFormatExpression(String expression) {
+        return (expression.contains(PLUS) || expression.contains(MINUS) ||
+                expression.contains(DIVIDE) || expression.contains(MULTIPLY));
     }
 }

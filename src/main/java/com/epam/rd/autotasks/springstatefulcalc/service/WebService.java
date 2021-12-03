@@ -5,12 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public interface CalculatorControllerService {
-    boolean isParameterHasOverLimitValue(String paramValue);
-
-    boolean isGoodFormatExpression(String expression);
-
-    boolean isDigit(String paramValue);
+public interface WebService {
 
     String getParamNameFromURL(HttpServletRequest httpServletRequest);
 
